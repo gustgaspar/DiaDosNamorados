@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="coracao.png" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Uma página especial para celebrar o Dia dos Namorados com fotos e música.">
+    <title>Para Cecília</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #ffcccc, #ffe6e6);
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        header {
+            text-align: center;
+            padding: 2rem;
+        }
+        header h1 {
+            font-size: 3rem;
+            color: #e60073;
+        }
+        .carousel {
+            position: relative;
+            width: 95%;
+            max-width: 350px;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        .carousel img {
+            width: 100%;
+            height: 400px;
+            flex-shrink: 0;
+        }
+        footer {
+            margin-top: 2rem;
+            padding: 1rem;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+        audio {
+            display: none;
+        }
+        .play-button {
+            background-color: #e60073;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            margin-top: 20px;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: -1;
+        }
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #ff6699;
+            transform: rotate(45deg);
+            animation: float 10s linear infinite;
+        }
+        .heart::before,
+        .heart::after {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #ff6699;
+            border-radius: 50%;
+        }
+        .heart::before {
+            top: -10px;
+            left: 0;
+        }
+        .heart::after {
+            top: 0;
+            left: -10px;
+        }
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(45deg); }
+            100% { transform: translateY(-10vh) rotate(45deg); }
+        }
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 2rem;
+            }
+            .play-button {
+                font-size: 1.2rem;
+                padding: 10px 20px;
+            }
+            footer {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts" id="hearts"></div>
+    <header>
+        <h1>Feliz Dia dos Namorados, Minha fofa ❤️</h1>
+        <p>Preparei esse cantinho especial para relembrar nossos momentos incríveis!</p>
+    </header>
+    
+    <div class="carousel">
+        <div class="carousel-track">
+            <img src="foto1.png" alt="us">
+            <img src="Captura de tela 2025-06-10 215030.png" alt="Nossa foto 1">
+            <img src="mine.jpeg" alt="us">
+            <img src="foto2.jpeg" alt="us">
+            <img src="carroo.jpeg" alt="us">
+            <img src="fofos.jpeg" alt="us">
+            <img src="lindos.jpeg" alt="us">
+            <img src="maisuma.jpeg" alt="us">
+            <img src="deolho.jpeg" alt="us">
+            <img src="WhatsApp Image 2025-06-10 at 21.47.28.jpeg" alt="Nossa foto 2">
+        </div>
+    </div>
+    
+    <button class="play-button" id="playBtn">💖 Por um clima 💖</button>
+
+    <audio id="musica" loop>
+        <source src="musica.mp3" type="audio/mpeg">
+        Seu navegador não suporta o elemento de áudio.
+    </audio>
+
+    <footer>
+        <p>Todas essas recordações são momentos que marcaram minha vida como nenhum outro, você fez minha vida mudar e cada dia ter mais sentido, com você eu sou mais feliz! Cada dia com você é único. Com todo o meu amor, Gustavo e Bolinho 💖</p>
+    </footer>
+
+    <script>
+        const track = document.querySelector('.carousel-track');
+        const slides = Array.from(track.children);
+        let index = 0;
+
+        function moveToSlide(idx) {
+            track.style.transform = 'translateX(-' + idx * 100 + '%)';
+        }
+
+        function autoSlide() {
+            index = (index + 1) % slides.length;
+            moveToSlide(index);
+        }
+
+        let slideInterval = setInterval(autoSlide, 3000);
+
+        let startX = 0;
+        let isDragging = false;
+
+        track.addEventListener('touchstart', e => {
+            clearInterval(slideInterval);
+            startX = e.touches[0].clientX;
+            isDragging = true;
+        });
+
+        track.addEventListener('touchmove', e => {
+            if (!isDragging) return;
+            let moveX = e.touches[0].clientX - startX;
+            track.style.transform = 'translateX(' + (-index * 100 + moveX / track.offsetWidth * 100) + '%)';
+        });
+
+        track.addEventListener('touchend', e => {
+            isDragging = false;
+            let endX = e.changedTouches[0].clientX;
+            if (startX - endX > 50) {
+                index = (index + 1) % slides.length;
+            } else if (endX - startX > 50) {
+                index = (index - 1 + slides.length) % slides.length;
+            }
+            moveToSlide(index);
+            slideInterval = setInterval(autoSlide, 3000);
+        });
+
+        document.getElementById('playBtn').addEventListener('click', () => {
+            const audio = document.getElementById('musica');
+            audio.play();
+        });
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (5 + Math.random() * 5) + 's';
+            document.getElementById('hearts').appendChild(heart);
+            setTimeout(() => heart.remove(), 10000);
+        }
+        setInterval(createHeart, 500);
+    </script>
+</body>
+</html>
